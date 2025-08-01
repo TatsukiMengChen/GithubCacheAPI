@@ -15,19 +15,25 @@ import (
 func ProxyHandler(ca *cache.Cache) gin.HandlerFunc {
     return func(c *gin.Context) {
         path := c.Param("path")
+        // 去除 path 前的 proxy 前缀（如 /proxy/repos/... => /repos/...）
+        if len(path) > 0 && path[0] == '/' {
+            path = path[1:]
+        }
         query := c.Request.URL.RawQuery
         cacheKey := fmt.Sprintf("github:%s?%s", path, query)
         ctx := context.Background()
 
+        var val string
         if c.Request.Method == http.MethodGet {
-            val, err := ca.Get(ctx, cacheKey)
+            v, err := ca.Get(ctx, cacheKey)
             if err == nil {
                 ttl, _ := ca.TTL(ctx, cacheKey)
                 if ttl > 0 && ttl <= time.Hour {
-                    c.Data(http.StatusOK, "application/json", []byte(val))
+                    c.Data(http.StatusOK, "application/json", []byte(v))
                     return
                 }
             }
+            val = v
         }
 
         var resp *http.Response

@@ -13,8 +13,11 @@ var (
     tokenIdx uint32
 )
 
-func init() {
+
+// 手动初始化 tokens，需在 .env 加载后调用
+func InitTokens() {
     env := os.Getenv("GITHUB_TOKENS")
+    tokens = nil
     for _, t := range strings.Split(env, ",") {
         t = strings.TrimSpace(t)
         if t != "" {
