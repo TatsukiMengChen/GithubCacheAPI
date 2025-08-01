@@ -1,0 +1,28 @@
+# Go build
+/app
+*.exe
+*.out
+*.test
+
+# Dependency directories
+/vendor/
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Docker
+*.pid
+docker-compose.override.yml
+
+# Others
+.DS_Store
